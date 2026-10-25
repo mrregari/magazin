@@ -17,7 +17,7 @@ class CartController extends Controller
         $product = Product::findOrFail($data['product_id']);
         $cart = new Cart();
         $cart->addToCart($product, $data['qty']);
-        return view('cart.cart-modal');
+        return back();
     }
     
     public function show() {
