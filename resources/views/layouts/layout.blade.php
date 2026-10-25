@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
-
+    <script src="{{ asset('assets/front/js/mainmain.js') }}"></script>
     <title>@yield('title', 'Laravel Shop')</title>
 </head>
 <body>
