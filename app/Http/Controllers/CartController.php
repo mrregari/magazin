@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Cart;
 
 class CartController extends Controller
 {
@@ -12,16 +14,10 @@ class CartController extends Controller
             'qty' => 'required|integer',
         ]);
         $data = $request->all();
-
-        if ($request->ajax()) {
-            return response()->json([
-                'answer' => 'success',
-                'id' => $data['product_id'],
-                'qty' => $data['qty'],
-            ]);
-        } else {
-            dd($data);
-        }
+        $product = Product::findOrFail($data['product_id']);
+        $cart = new Cart();
+        $cart->addToCart($product, $data['qty']);
+        return view('cart.cart-modal');
     }
     
     
