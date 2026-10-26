@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
+use Illuminate\Support\Facades\DB;
+use App\Models\Order;
 
 class CartController extends Controller
 {
@@ -46,4 +48,31 @@ class CartController extends Controller
         session()->forget('cart_total');
         return view('cart.cart-modal');
     }
+    public function checkout(Request $request) {
+        if ($request->method() == 'POST') {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+                'phone' => 'required',
+                'address' => 'required',
+            ]);
+            $data = $request->all();
+
+            DB::transaction(function() use ($data) {
+                $order_data = array_merge([
+                    'qty' => session('cart_qty'),
+                    'total' => session('cart_total'),
+                ], $data);
+                $order = Order::create($order_data);
+                $order->products()->createMany(session('cart'));
+            });
+
+            session()->forget('cart');
+            session()->forget('cart_qty');
+            session()->forget('cart_total');
+            return redirect()->route('cart.checkout')->with('success', 'Заказ оформлен');
+        }
+        return view('cart.checkout');
+    }
 }
+

@@ -40,7 +40,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary btn-cart">Оформить заказ</button>
+        <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-cart @if(empty(session('cart'))) d-one @endif">Оформить заказ</a> 
         
         <button type="button" class="btn btn-danger clear-cart" data-action="{{ route('cart.clear') }}">
             Очистить корзину
