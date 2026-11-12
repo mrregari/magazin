@@ -11,7 +11,9 @@ class Product extends Model
     use HasFactory;
     use Sluggable;
 
-        public function sluggable(): array
+    protected $fillable = ['title','content','category_id','status_id','img','price','old_price','hit','sale'];
+
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -29,9 +31,12 @@ class Product extends Model
     }
     public function getImage() {
         if (!$this->img) {
-            return asset('no-image.png');
-        } else {
-            return asset("storage/{$this->img}");
+            return asset('assets/front/img/no-image.png');
         }
+        // Картинки из public/assets/... отдаём напрямую, остальные лежат в storage
+        if (str_starts_with($this->img, 'assets/')) {
+            return asset($this->img);
+        }
+        return asset("storage/{$this->img}");
     }
 }

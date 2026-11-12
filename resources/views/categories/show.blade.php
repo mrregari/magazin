@@ -1,6 +1,5 @@
 @extends('layouts.layout')
-@section('@parent :: {{ $title }}')
-@endsection
+@section('title', $category->title)
 @section('content')
     <div class="product-cards mb-5">
         <div class="col-md-12">
@@ -25,9 +24,9 @@
                         </div>
                         <div class="card-price text-center">
                             @if($product->old_price)
-                                <del><small>{{ $product->old_price }} руб.</small></del>
+                                <del><small>@price_format($product->old_price) руб.</small></del>
                             @endif
-                            {{ $product->price }} руб.
+                            @price_format($product->price) руб.
                         </div>
 
                         <form action="{{ route('cart.add') }}" method="post" class="addtocart">
@@ -56,81 +55,6 @@
             {{ $products->links() }}
         </nav>
     </div>
-
-        <div class="product-card">
-            <div class="offer">
-                <div class="offer-hit">Hit</div>
-            </div>
-            <div class="card-thumb">
-                <a href="product.html"><img src="{{ asset('assets/front/img/2.jpg') }}" alt=""></a>
-            </div>
-            <div class="card-caption">
-                <div class="card-title">
-                    <a href="product.html">Crafter D6/N Акустическая гитара</a>
-                </div>
-                <div class="card-price text-center">
-                    12 626 руб.
-                </div>
-                <button type="button" class="btn btn-info btn-block card-addtocart">
-                    <i class="fas fa-cart-arrow-down"></i> Купить
-                </button>
-                <div class="item-status">
-                    <i class="far fa-pause-circle text-danger"></i> Ожидается
-                </div>
-            </div>
-        </div><!-- /product-card -->
-
-        <div class="product-card">
-            <div class="card-thumb">
-                <a href="product.html"><img src="{{ asset('assets/front/img/16.jpg') }}" alt=""></a>
-            </div>
-            <div class="card-caption">
-                <div class="card-title">
-                    <a href="product.html">Crafter MD-42/TR Акустическая гитара</a>
-                </div>
-                <div class="card-price text-center">
-                    9 006 руб.
-                </div>
-                <button type="button" class="btn btn-info btn-block card-addtocart">
-                    <i class="fas fa-cart-arrow-down"></i> Купить
-                </button>
-                <div class="item-status">
-                    <i class="fas fa-check text-success"></i> В наличии
-                </div>
-            </div>
-        </div><!-- /product-card -->
-
-        <div class="product-card">
-            <div class="card-thumb">
-                <a href="product.html"><img src="{{ asset('assets/front/img/no-image.png') }}" alt=""></a>
-            </div>
-            <div class="card-caption">
-                <div class="card-title">
-                    <a href="product.html">CRAFTER TA070/Light Amber Акустическая гитара</a>
-                </div>
-                <div class="card-price text-center">
-                    20 378 руб.
-                </div>
-                <button type="button" class="btn btn-info btn-block card-addtocart">
-                    <i class="fas fa-cart-arrow-down"></i> Купить
-                </button>
-                <div class="item-status">
-                    <i class="fas fa-shipping-fast text-muted"></i> В наличии на складе
-                </div>
-            </div>
-        </div><!-- /product-card -->
-
-    </div><!-- /product-cards -->
-
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-    </nav>
 
     @if(count($products))
         <div class="col-md-12">

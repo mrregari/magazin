@@ -8,46 +8,87 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function create() {
+    /**
+     * Показать форму регистрации.
+     */
+    public function create()
+    {
         return view('user.create');
     }
 
-    public function store(Request $request) {
+    /**
+     * Обработать форму регистрации: валидация, создание пользователя, автоматический вход.
+     */
+    public function store(Request $request)
+    {
+        // Правила валидации; "confirmed" ищет поле password_confirmation
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        $user = User::create ([
+        // Пароль хешируется автоматически через cast 'hashed' в модели User
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => $request->password,
         ]);
 
         session()->flash('success', 'Регистрация пройдена');
-            Auth::login($user);
-        return redirect()->home();
+        Auth::login($user);
+
+        return redirect()->route('home');
     }
 
-    public function loginForm() {
+    /**
+     * Показать форму входа.
+     */
+    public function loginForm()
+    {
         return view('user.login');
     }
 
-    public function login(Request $request) {
-        $request->validate([
+    /**
+     * Обработать форму входа.
+     */
+    public function login(Request $request)
+    {
+        // Проверяем, что поля заполнены и email имеет корректный формат
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt ([
-            'email' => 're'
-        ]))
+        // Auth::attempt сам сравнивает хеш пароля; второй аргумент - галочка "Запомнить меня"
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            // Защита от session fixation: после входа выдаём новый ID сессии
+            $request->session()->regenerate();
+            session()->flash('success', 'Вы вошли в систему');
+
+            // Администратор попадает в админку, обычный пользователь - на главную
+            if (Auth::user()->is_admin) {
+                return redirect()->route('admin.index');
+            }
+            return redirect()->intended(route('home'));
+        }
+
+        // Неверные данные: возвращаем на форму с ошибкой, email оставляем в поле
+        return back()
+            ->withErrors(['email' => 'Неверный email или пароль'])
+            ->onlyInput('email');
     }
 
-    public function logout() {
+    /**
+     * Выход из системы (вызывается методом POST).
+     */
+    public function logout(Request $request)
+    {
         Auth::logout();
-        return redirect()->route('login.create');
-    }
+        // Сбрасываем сессию и CSRF-токен
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
+        return redirect()->route('login');
+    }
 }

@@ -6,24 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('order_products', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id')->unsigned();
-            $table->integer('product_id')->unsigned();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            // Без внешнего ключа: история заказа остаётся, даже если товар удалят
+            $table->unsignedBigInteger('product_id');
             $table->string('title');
-            $table->string('price');
-            $table->tinyInteger('qty')->unsigned();
+            $table->double('price');
+            $table->unsignedInteger('qty');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('order_products');

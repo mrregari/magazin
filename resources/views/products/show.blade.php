@@ -1,7 +1,6 @@
 @extends('layouts.layout')
 
-@section('@parent :: {{ $product->$title }}')
-@endsection
+@section('title', $product->title)
 
 @section('content')
     <div class="col-md-12">
@@ -47,6 +46,7 @@
         <hr>
 
         <div class="product-desc">
+            {{-- Контент вводит администратор; при пользовательском вводе заменить на {{ }} --}}
             {!! $product->content !!}
         </div>
     </div>

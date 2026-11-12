@@ -17,10 +17,10 @@ class CartController extends Controller
                 'required',
                 'integer',
                 'min:1',
-                'regex:/^[1-9][0-9]*$/'
+                'max:1000',
             ],
         ]);
-        $data = $request->all();
+        $data = $request->only(['product_id', 'qty']);
         $product = Product::findOrFail($data['product_id']);
         $cart = new Cart();
         $cart->addToCart($product, $data['qty']);
@@ -50,13 +50,17 @@ class CartController extends Controller
     }
     public function checkout(Request $request) {
         if ($request->method() == 'POST') {
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'address' => 'required',
+            // Нельзя оформить заказ с пустой корзиной
+            if (empty(session('cart'))) {
+                return redirect()->route('cart.checkout')->withErrors(['cart' => 'Корзина пустая']);
+            }
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:50',
+                'address' => 'required|string|max:255',
+                'note' => 'nullable|string',
             ]);
-            $data = $request->all();
 
             DB::transaction(function() use ($data) {
                 $order_data = array_merge([

@@ -1,6 +1,5 @@
 @extends('layouts.layout')
-@section('@parent :: {{ $title }}')
-@endsection
+@section('title', 'Оформление заказа')
 @section('content')
     <div class="col-md-12">
         <h1>Оформление заказа</h1>
@@ -8,7 +7,7 @@
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
-                    @foreach ($errors-all() as $error)
+                    @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
@@ -55,7 +54,7 @@
                     </tr>
                     <tr>
                         <td colspan="4" align="right">На сумму:</td>
-                        <td id="modal-cart-total">@price_format(session('cart_total'))руб.</td>
+                        <td id="modal-cart-total">@price_format(session('cart_total')) руб.</td>
                     </tr>
                 </tbody>
             </table>    
@@ -65,7 +64,7 @@
         @csrf
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" required>
+            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
         </div>
 
         <div class="form-group">

@@ -22,10 +22,11 @@
                     <td>@price_format($item['price']) руб.</td>
                     <td>{{ $item['qty'] }}</td>
                     <td>
-                        <span class="text-danger del-item" data-action="{{ route('cart.del_item', ['product_id' => $item['id']]) }}">
+                        <span class="text-danger del-item" data-action="{{ route('cart.del_item', ['product_id' => $item['product_id']]) }}">
                             <i class="fas fa-times"></i>
                         </span>
                     </td>
+                </tr>
                 @endforeach
                 <tr>
                     <td colspan="3" align="right">Итого:</td>
@@ -33,14 +34,14 @@
                 </tr>
                 <tr>
                     <td colspan="3" align="right">На сумму:</td>
-                    <td id="modal-cart-total">@price_format(session('cart_total'))руб.</td>
+                    <td id="modal-cart-total">@price_format(session('cart_total')) руб.</td>
                 </tr>
             </tbody>
         </table>    
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-cart @if(empty(session('cart'))) d-one @endif">Оформить заказ</a> 
+        <a href="{{ route('cart.checkout') }}" class="btn btn-primary btn-cart @if(empty(session('cart'))) d-none @endif">Оформить заказ</a> 
         
         <button type="button" class="btn btn-danger clear-cart" data-action="{{ route('cart.clear') }}">
             Очистить корзину

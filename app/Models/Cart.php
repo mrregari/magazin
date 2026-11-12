@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model
+/**
+ * Сервисный класс корзины (хранится в сессии, таблицы в БД нет).
+ */
+class Cart
 {
-    use HasFactory;
-
     public function addToCart($product, $qty) {
         if (session()->has("cart.{$product->id}")) {
             session(["cart.{$product->id}.qty" => session("cart.{$product->id}.qty") + $qty]);
