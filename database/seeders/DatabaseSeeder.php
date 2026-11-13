@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
                     'img' => "assets/front/img/{$i}.jpg",
                     'price' => 5000 + $i * 1500,
                     'old_price' => $i % 4 === 0 ? 7000 + $i * 1500 : 0,
+                    'qty' => 10,
                     'hit' => $i % 5 === 0,
                     'sale' => $i % 4 === 0,
                 ]);

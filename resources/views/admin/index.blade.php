@@ -3,6 +3,7 @@
 @section('content')
     <div class="col-md-12">
         <h1>Админ-панель</h1>
+        <p><a href="{{ route('admin.products.index') }}" class="btn btn-primary">Управление товарами</a></p>
         <p>Вы вошли как <b>{{ Auth::user()->name }}</b>.</p>
 
         <h4>Последние заказы</h4>

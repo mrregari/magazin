@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
@@ -35,6 +36,11 @@ Route::post('/logout', [UserController::class, 'logout'])->middleware('auth')->n
 
 // ---------- Панель администратора ----------
 // "auth" - вошёл в систему, "admin" - наш AdminMiddleware (is_admin = 1)
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+// ->name('admin.') добавляет префикс ко всем именам маршрутов группы
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('index');
+
+    // Ресурсный маршрут: 7 маршрутов CRUD для товаров
+    // admin.products.index / create / store / show / edit / update / destroy
+    Route::resource('products', AdminProductController::class);
 });
